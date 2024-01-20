@@ -179,7 +179,14 @@ lspconfig.tsserver.setup({
 })
 lspconfig.rust_analyzer.setup({
 	settings = {
-		["rust-analyzer"] = {},
+		["rust-analyzer"] = {
+			check = {
+				command = "clippy",
+			},
+			diagnostics = {
+				enable = true,
+			},
+		},
 	},
 })
 

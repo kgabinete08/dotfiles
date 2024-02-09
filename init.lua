@@ -245,6 +245,12 @@ require("formatter").setup({
 
 	-- All formatter configurations are opt-in
 	filetype = {
+		javascript = {
+			require("formatter.filetypes.javascript").prettiereslint,
+		},
+		javascriptreact = {
+			require("formatter.filetypes.javascriptreact").prettiereslint,
+		},
 		lua = {
 			require("formatter.filetypes.lua").stylua,
 
@@ -269,11 +275,11 @@ require("formatter").setup({
 		rust = {
 			require("formatter.filetypes.rust").rustfmt,
 		},
-		typescriptreact = {
-			require("formatter.filetypes.typescriptreact").prettiereslint,
-		},
 		typescript = {
 			require("formatter.filetypes.typescript").prettiereslint,
+		},
+		typescriptreact = {
+			require("formatter.filetypes.typescriptreact").prettiereslint,
 		},
 		-- any filetype
 		["*"] = {

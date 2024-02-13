@@ -30,6 +30,9 @@ vim.keymap.set("n", "<c-P>", "<cmd>lua require('fzf-lua').files()<CR>", { silent
 -- ctrl lg to live grep
 vim.keymap.set("n", "<c-L><c-G>", "<cmd>lua require('fzf-lua').live_grep()<CR>", { silent = true })
 
+-- leader e to open diagnostic floats e.g. lint errors
+vim.keymap.set("n", "<Leader>e", "<cmd>lua vim.diagnostic.open_float()<CR>", { silent = true })
+
 -- splits
 opt.splitright = true
 opt.splitbelow = true

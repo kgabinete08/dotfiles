@@ -20,10 +20,6 @@ o.smartindent = true
 o.tabstop = 2
 o.shiftwidth = 2
 
--- vim-gitgutter
-o.updatetime = 100
-o.signcolumn = "auto"
-
 -- ctrl p to search files
 vim.keymap.set("n", "<c-P>", "<cmd>lua require('fzf-lua').files()<CR>", { silent = true })
 
@@ -60,12 +56,10 @@ require("lazy").setup({
 	"folke/tokyonight.nvim",
 	lazy = false,
 	priority = 1000,
-	opts = {},
 	"itchyny/lightline.vim",
 	lazy = false,
 	priority = 1000,
-	opts = {},
-	"airblade/vim-gitgutter",
+	"lewis6991/gitsigns.nvim",
 	lazy = true,
 	priority = 1000,
 	"sindrets/diffview.nvim",
@@ -159,6 +153,9 @@ require("lazy").setup({
 -- colorscheme
 vim.cmd([[colorscheme tokyonight-night]])
 
+-- gitsigns
+require("gitsigns").setup()
+
 -- mason
 require("mason").setup()
 require("mason-lspconfig").setup({
@@ -217,6 +214,8 @@ require("prettier").setup()
 require("lint").linters_by_ft = {
 	typescriptreact = { "eslint_d" },
 	typescript = { "eslint_d" },
+	javascriptreact = { "eslint_d" },
+	javascript = { "eslint_d" },
 }
 
 -- suppress eslint not found in node_modules global error

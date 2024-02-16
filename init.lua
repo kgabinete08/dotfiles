@@ -59,12 +59,11 @@ require("lazy").setup({
 	"itchyny/lightline.vim",
 	lazy = false,
 	priority = 1000,
-	"lewis6991/gitsigns.nvim",
-	lazy = true,
-	priority = 1000,
-	"sindrets/diffview.nvim",
-	lazy = true,
-	priority = 1000,
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+	},
 	{
 		"kylechui/nvim-surround",
 		version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -142,6 +141,9 @@ require("lazy").setup({
 			})
 		end,
 	},
+	"lewis6991/gitsigns.nvim",
+	"sindrets/diffview.nvim",
+	"m4xshen/autoclose.nvim",
 	"williamboman/mason.nvim",
 	"williamboman/mason-lspconfig.nvim",
 	"mfussenegger/nvim-lint",
@@ -151,10 +153,13 @@ require("lazy").setup({
 })
 
 -- colorscheme
-vim.cmd([[colorscheme tokyonight-night]])
+vim.cmd("colorscheme catppuccin")
 
 -- gitsigns
 require("gitsigns").setup()
+
+-- autoclose
+require("autoclose").setup()
 
 -- mason
 require("mason").setup()

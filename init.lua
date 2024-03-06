@@ -53,16 +53,24 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	"folke/tokyonight.nvim",
-	lazy = false,
-	priority = 1000,
-	"itchyny/lightline.vim",
-	lazy = false,
-	priority = 1000,
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+	},
+	{
+		"itchyny/lightline.vim",
+		lazy = false,
+		priority = 1000,
+	},
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
 		priority = 1000,
+	},
+	{
+		"numToStr/Comment.nvim",
+		lazy = false,
 	},
 	{
 		"kylechui/nvim-surround",
@@ -141,7 +149,13 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		"pmizio/typescript-tools.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+		opts = {},
+	},
 	"lewis6991/gitsigns.nvim",
+	"f-person/git-blame.nvim",
 	"sindrets/diffview.nvim",
 	"m4xshen/autoclose.nvim",
 	"williamboman/mason.nvim",
@@ -158,6 +172,11 @@ vim.cmd("colorscheme catppuccin")
 -- gitsigns
 require("gitsigns").setup()
 
+-- git git-blame
+require("gitblame").setup({
+	date_format = "%r",
+})
+
 -- autoclose
 require("autoclose").setup()
 
@@ -172,16 +191,22 @@ require("mason-lspconfig").setup({
 	},
 })
 
--- lsp
-local lspconfig = require("lspconfig")
-lspconfig.eslint.setup({})
-lspconfig.tsserver.setup({
+-- styled-components typescript-tools
+require("typescript-tools").setup({
 	settings = {
 		tsserver_plugins = {
+			-- for TypeScript v4.9+
 			"@styled/typescript-styled-plugin",
+			-- or for older TypeScript versions
+			-- "typescript-styled-plugin",
 		},
 	},
 })
+
+-- lsp
+local lspconfig = require("lspconfig")
+lspconfig.eslint.setup({})
+lspconfig.tsserver.setup({})
 lspconfig.rust_analyzer.setup({
 	settings = {
 		["rust-analyzer"] = {
@@ -303,3 +328,6 @@ autocmd("BufWritePost", {
 	group = "__formatter__",
 	command = ":FormatWrite",
 })
+
+-- comments
+require("Comment").setup()

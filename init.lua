@@ -59,9 +59,8 @@ require("lazy").setup({
 		priority = 1000,
 	},
 	{
-		"itchyny/lightline.vim",
-		lazy = false,
-		priority = 1000,
+		"nvim-lualine/lualine.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 	{
 		"catppuccin/nvim",
@@ -169,6 +168,14 @@ require("lazy").setup({
 -- colorscheme
 vim.cmd("colorscheme catppuccin")
 
+-- lualine
+require("lualine").setup({
+	options = {
+		theme = "nightfly",
+		icons_enabled = false,
+	},
+})
+
 -- gitsigns
 require("gitsigns").setup()
 
@@ -177,7 +184,7 @@ require("gitblame").setup({
 	date_format = "%r",
 })
 
--- autoclose
+-- auto pair and close brackets
 require("autoclose").setup()
 
 -- mason

@@ -153,14 +153,16 @@ require("lazy").setup({
 		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
 		opts = {},
 	},
+	{
+		"stevearc/conform.nvim",
+		opts = {},
+	},
 	"lewis6991/gitsigns.nvim",
 	"f-person/git-blame.nvim",
 	"sindrets/diffview.nvim",
 	"m4xshen/autoclose.nvim",
 	"williamboman/mason.nvim",
 	"williamboman/mason-lspconfig.nvim",
-	"mfussenegger/nvim-lint",
-	"mhartington/formatter.nvim",
 	"neovim/nvim-lspconfig",
 	"MunifTanjim/prettier.nvim",
 })
@@ -194,14 +196,14 @@ require("mason-lspconfig").setup({
 		"lua_ls",
 		"rust_analyzer",
 		"eslint",
-		"tsserver",
+		"ts_ls",
 	},
 })
 
 -- styled-components typescript-tools
 require("typescript-tools").setup({
 	settings = {
-		tsserver_plugins = {
+		ts_ls_plugins = {
 			-- for TypeScript v4.9+
 			"@styled/typescript-styled-plugin",
 			-- or for older TypeScript versions
@@ -213,7 +215,7 @@ require("typescript-tools").setup({
 -- lsp
 local lspconfig = require("lspconfig")
 lspconfig.eslint.setup({})
-lspconfig.tsserver.setup({})
+lspconfig.ts_ls.setup({})
 lspconfig.rust_analyzer.setup({
 	settings = {
 		["rust-analyzer"] = {
@@ -246,95 +248,25 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- linters
-require("prettier").setup()
-require("lint").linters_by_ft = {
-	typescriptreact = { "eslint_d" },
-	typescript = { "eslint_d" },
-	javascriptreact = { "eslint_d" },
-	javascript = { "eslint_d" },
-}
-
--- suppress eslint not found in node_modules global error
-local eslint_d = require("lint").linters.eslint_d
-eslint_d.args = {
-	"--no-warn-ignored",
-	"--format",
-	"json",
-	"--stdin",
-	"--stdin-filename",
-	function()
-		return vim.api.nvim_buf_get_name(0)
-	end,
-}
-
--- how often lint should run
-vim.api.nvim_create_autocmd({ "TextChanged" }, {
-	callback = function()
-		require("lint").try_lint(nil, { ignore_errors = true })
-	end,
-})
-
--- formatter
-local util = require("formatter.util")
-
-require("formatter").setup({
-	logging = true,
-	log_level = vim.log.levels.WARN,
-
-	-- All formatter configurations are opt-in
-	filetype = {
-		javascript = {
-			require("formatter.filetypes.javascript").prettiereslint,
-		},
-		javascriptreact = {
-			require("formatter.filetypes.javascriptreact").prettiereslint,
-		},
-		lua = {
-			require("formatter.filetypes.lua").stylua,
-
-			function()
-				if util.get_current_buffer_file_name() == "special.lua" then
-					return nil
-				end
-
-				return {
-					exe = "stylua",
-					args = {
-						"--search-parent-directories",
-						"--stdin-filepath",
-						util.escape_path(util.get_current_buffer_file_path()),
-						"--",
-						"-",
-					},
-					stdin = true,
-				}
-			end,
-		},
-		rust = {
-			require("formatter.filetypes.rust").rustfmt,
-		},
-		typescript = {
-			require("formatter.filetypes.typescript").prettiereslint,
-		},
-		typescriptreact = {
-			require("formatter.filetypes.typescriptreact").prettiereslint,
-		},
-		-- any filetype
-		["*"] = {
-			require("formatter.filetypes.any").remove_trailing_whitespace,
-		},
+require("conform").setup({
+	formatters_by_ft = {
+		lua = { "stylua" },
+		-- Conform will run multiple formatters sequentially
+		python = { "isort", "black" },
+		-- You can customize some of the format options for the filetype (:help conform.format)
+		rust = { "rustfmt", lsp_format = "fallback" },
+		-- Conform will run the first available formatter
+		javascript = { "prettierd", "prettier", stop_after_first = true },
+	},
+	format_on_save = {
+		-- These options will be passed to conform.format()
+		timeout_ms = 500,
+		lsp_format = "fallback",
 	},
 })
 
--- format on save
-local augroup = vim.api.nvim_create_augroup
-local autocmd = vim.api.nvim_create_autocmd
-augroup("__formatter__", { clear = true })
-autocmd("BufWritePost", {
-	group = "__formatter__",
-	command = ":FormatWrite",
-})
+-- linters
+require("prettier").setup()
 
 -- comments
 require("Comment").setup()

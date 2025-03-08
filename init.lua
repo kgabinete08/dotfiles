@@ -164,6 +164,7 @@ require("lazy").setup({
 	"williamboman/mason.nvim",
 	"williamboman/mason-lspconfig.nvim",
 	"neovim/nvim-lspconfig",
+	"mfussenegger/nvim-lint",
 	"MunifTanjim/prettier.nvim",
 })
 
@@ -214,8 +215,6 @@ require("typescript-tools").setup({
 
 -- lsp
 local lspconfig = require("lspconfig")
-lspconfig.eslint.setup({})
-lspconfig.ts_ls.setup({})
 lspconfig.rust_analyzer.setup({
 	settings = {
 		["rust-analyzer"] = {
@@ -261,13 +260,32 @@ require("conform").setup({
 	},
 	format_on_save = {
 		-- These options will be passed to conform.format()
-		timeout_ms = 500,
+		timeout_ms = 1000,
 		lsp_format = "fallback",
 	},
 })
 
 -- linters
 require("prettier").setup()
+require("lint").linters_by_ft = {
+	typescriptreact = { "eslint_d" },
+	typescript = { "eslint_d" },
+	javascriptreact = { "eslint_d" },
+	javascript = { "eslint_d" },
+}
+
+-- suppress eslint not found in node_modules global error
+local eslint_d = require("lint").linters.eslint_d
+eslint_d.args = {
+	"--no-warn-ignored",
+	"--format",
+	"json",
+	"--stdin",
+	"--stdin-filename",
+	function()
+		return vim.api.nvim_buf_get_name(0)
+	end,
+}
 
 -- comments
 require("Comment").setup()

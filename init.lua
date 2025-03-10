@@ -169,7 +169,7 @@ require("lazy").setup({
 })
 
 -- colorscheme
-vim.cmd("colorscheme catppuccin")
+vim.cmd("colorscheme catppuccin-mocha")
 
 -- lualine
 require("lualine").setup({

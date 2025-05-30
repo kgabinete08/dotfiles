@@ -14,6 +14,10 @@ opt.listchars = {
 	trail = "·",
 }
 
+-- use terminal colors
+opt.termguicolors = true
+o.background = "dark"
+
 -- tabs
 o.expandtab = true
 o.smartindent = true
@@ -67,6 +71,18 @@ require("lazy").setup({
 		name = "catppuccin",
 		priority = 1000,
 	},
+	{ "EdenEast/nightfox.nvim" },
+	{ "sainnhe/everforest" },
+	{ "rose-pine/neovim", name = "rose-pine" },
+	{ "rebelot/kanagawa.nvim" },
+	{
+		"AlexvZyl/nordic.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			require("nordic").load()
+		end,
+	},
 	{
 		"numToStr/Comment.nvim",
 		lazy = false,
@@ -94,6 +110,11 @@ require("lazy").setup({
 			-- calling `setup` is optional for customization
 			require("fzf-lua").setup({})
 		end,
+	},
+	{
+		"mrcjkb/rustaceanvim",
+		version = "^6", -- Recommended
+		lazy = false, -- This plugin is already lazy
 	},
 	{
 		"hrsh7th/nvim-cmp",
@@ -154,6 +175,15 @@ require("lazy").setup({
 		opts = {},
 	},
 	{
+		"greggh/claude-code.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim", -- Required for git operations
+		},
+		config = function()
+			require("claude-code").setup()
+		end,
+	},
+	{
 		"stevearc/conform.nvim",
 		opts = {},
 	},
@@ -169,7 +199,7 @@ require("lazy").setup({
 })
 
 -- colorscheme
-vim.cmd("colorscheme catppuccin-mocha")
+vim.cmd("colorscheme duskfox")
 
 -- lualine
 require("lualine").setup({
@@ -192,14 +222,6 @@ require("autoclose").setup()
 
 -- mason
 require("mason").setup()
-require("mason-lspconfig").setup({
-	ensure_installed = {
-		"lua_ls",
-		"rust_analyzer",
-		"eslint",
-		"ts_ls",
-	},
-})
 
 -- styled-components typescript-tools
 require("typescript-tools").setup({
@@ -209,21 +231,6 @@ require("typescript-tools").setup({
 			"@styled/typescript-styled-plugin",
 			-- or for older TypeScript versions
 			-- "typescript-styled-plugin",
-		},
-	},
-})
-
--- lsp
-local lspconfig = require("lspconfig")
-lspconfig.rust_analyzer.setup({
-	settings = {
-		["rust-analyzer"] = {
-			check = {
-				command = "clippy",
-			},
-			diagnostics = {
-				enable = true,
-			},
 		},
 	},
 })
